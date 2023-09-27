@@ -574,9 +574,9 @@ function hmrAccept(bundle /*: ParcelRequire */ , id /*: string */ ) {
 }
 
 },{}],"aenu9":[function(require,module,exports) {
-// module for polyfilling
 var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 var _webImmediateJs = require("core-js/modules/web.immediate.js");
+var _modelJs = require("./model.js");
 var _runtime = require("regenerator-runtime/runtime");
 // import icons from the img file
 var _iconsSvg = require("url:../img/icons.svg");
@@ -608,20 +608,8 @@ const showRecipe = async function() {
         if (!id) return;
         renderSpinner(recipeContainer);
         // Getting t he recipe data
-        const res = await fetch(`https://forkify-api.herokuapp.com/api/v2/recipes/${id}`);
-        const data = await res.json();
-        if (!res.ok) throw new Error(`${(data, message)} {${res.status}}`);
-        let { recipe } = data.data;
-        recipe = {
-            cookingTime: recipe.cooking_time,
-            id: recipe.id,
-            imageUrl: recipe.image_url,
-            ingredients: recipe.ingredients,
-            publisher: recipe.publisher,
-            servings: recipe.servings,
-            sourceUrl: recipe.source_url,
-            title: recipe.title
-        };
+        await _modelJs.loadRecipe(id);
+        const { recipe } = _modelJs.state;
         // rendering the recipe data
         const markUp = `<figure class="recipe__fig">
         <img src=${recipe.imageUrl} alt="Tomato" class="recipe__img" />
@@ -727,7 +715,7 @@ evs.forEach((ev)=>{
 });
 showRecipe();
 
-},{"core-js/modules/web.immediate.js":"49tUX","regenerator-runtime/runtime":"dXNgZ","url:../img/icons.svg":"loVOp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"49tUX":[function(require,module,exports) {
+},{"core-js/modules/web.immediate.js":"49tUX","regenerator-runtime/runtime":"dXNgZ","url:../img/icons.svg":"loVOp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./model.js":"Y4A21"}],"49tUX":[function(require,module,exports) {
 "use strict";
 // TODO: Remove this module from `core-js@4` since it's split to modules listed below
 require("52e9b3eefbbce1ed");
@@ -2624,6 +2612,36 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}]},["aD7Zm","aenu9"], "aenu9", "parcelRequire3a11")
+},{}],"Y4A21":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "state", ()=>state);
+parcelHelpers.export(exports, "loadRecipe", ()=>loadRecipe);
+var _regeneratorRuntime = require("regenerator-runtime");
+const state = {
+    recipe: {}
+};
+const loadRecipe = async function(id) {
+    try {
+        const res = await fetch(`https://forkify-api.herokuapp.com/api/v2/recipes/${id}`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(`${(data, message)} {${res.status}}`);
+        let { recipe } = data.data;
+        state.recipe = {
+            cookingTime: recipe.cooking_time,
+            id: recipe.id,
+            imageUrl: recipe.image_url,
+            ingredients: recipe.ingredients,
+            publisher: recipe.publisher,
+            servings: recipe.servings,
+            sourceUrl: recipe.source_url,
+            title: recipe.title
+        };
+    } catch (err) {
+        alert(err);
+    }
+};
+
+},{"regenerator-runtime":"dXNgZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["aD7Zm","aenu9"], "aenu9", "parcelRequire3a11")
 
 //# sourceMappingURL=index.e37f48ea.js.map
