@@ -579,9 +579,9 @@ var _webImmediateJs = require("core-js/modules/web.immediate.js");
 var _modelJs = require("./model.js");
 var _runtime = require("regenerator-runtime/runtime");
 // import icons from the img file
-var _iconsSvg = require("url:../img/icons.svg");
-var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
-console.log((0, _iconsSvgDefault.default));
+var _viewRecipeJs = require("url:../js/view/viewRecipe.js");
+var _viewRecipeJsDefault = parcelHelpers.interopDefault(_viewRecipeJs);
+console.log((0, _viewRecipeJsDefault.default));
 const recipeContainer = document.querySelector(".recipe");
 const timeout = function(s) {
     return new Promise(function(_, reject) {
@@ -592,130 +592,31 @@ const timeout = function(s) {
 };
 // https://forkify-api.herokuapp.com/v2
 ///////////////////////////////////////
-// Loader spinner
-const renderSpinner = function(parentEl) {
-    const markUp = `<div class="spinner">
-  <svg>
-    <use href="${(0, _iconsSvgDefault.default)}#icon-loader"></use>
-  </svg>
-</div>`;
-    parentEl.innerHTML = "";
-    parentEl.insertAdjacentHTML("afterbegin", markUp);
-};
-const showRecipe = async function() {
+const controlRecipes = async function() {
     try {
         const id = window.location.hash.slice(1);
         if (!id) return;
-        renderSpinner(recipeContainer);
+        (0, _viewRecipeJsDefault.default).renderSpinner();
         // Getting t he recipe data
         await _modelJs.loadRecipe(id);
-        const { recipe } = _modelJs.state;
-        // rendering the recipe data
-        const markUp = `<figure class="recipe__fig">
-        <img src=${recipe.imageUrl} alt="Tomato" class="recipe__img" />
-        <h1 class="recipe__title">
-          <span>${recipe.title}</span>
-        </h1>
-      </figure>
-
-      <div class="recipe__details">
-        <div class="recipe__info">
-          <svg class="recipe__info-icon">
-            <use href="${(0, _iconsSvgDefault.default)}#icon-clock"></use>
-          </svg>
-          <span class="recipe__info-data recipe__info-data--minutes">${recipe.cookingTime}</span>
-          <span class="recipe__info-text">minutes</span>
-        </div>
-        <div class="recipe__info">
-          <svg class="recipe__info-icon">
-            <use href="${(0, _iconsSvgDefault.default)}#icon-users"></use>
-          </svg>
-          <span class="recipe__info-data recipe__info-data--people">${recipe.servings}</span>
-          <span class="recipe__info-text">servings</span>
-
-          <div class="recipe__info-buttons">
-            <button class="btn--tiny btn--increase-servings">
-              <svg>
-                <use href="${(0, _iconsSvgDefault.default)}#icon-minus-circle"></use>
-              </svg>
-            </button>
-            <button class="btn--tiny btn--increase-servings">
-              <svg>
-                <use href="${(0, _iconsSvgDefault.default)}#icon-plus-circle"></use>
-              </svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="recipe__user-generated">
-          <svg>
-            <use href="${(0, _iconsSvgDefault.default)}#icon-user"></use>
-          </svg>
-        </div>
-        <button class="btn--round">
-          <svg class="">
-            <use href="${(0, _iconsSvgDefault.default)}#icon-bookmark-fill"></use>
-          </svg>
-        </button>
-      </div>
-
-      <div class="recipe__ingredients">
-        <h2 class="heading--2">Recipe ingredients</h2>
-        <ul class="recipe__ingredient-list">
-        
-          ${recipe.ingredients.map((ing)=>{
-            return `<li class="recipe__ingredient">
-                  <svg class="recipe__icon">
-                  <use href="${0, _iconsSvgDefault.default}#icon-check"></use>
-                </svg>
-                <div class="recipe__quantity">${ing.quantity}</div>
-                <div class="recipe__description">
-                  <span class="recipe__unit">${recipe.unit}</span>
-                  ${recipe.description}
-                </div>
-              </li>`;
-        }).join("")}
-         
-        </ul>
-      </div>
-
-      <div class="recipe__directions">
-        <h2 class="heading--2">How to cook it</h2>
-        <p class="recipe__directions-text">
-          This recipe was carefully designed and tested by
-          <span class="recipe__publisher">${recipe.publisher}</span>. Please check out
-          directions at their website.
-        </p>
-        <a
-          class="btn--small recipe__btn"
-          href=${recipe.sourceUrl}
-          target="_blank"
-        >
-          <span>Directions</span>
-          <svg class="search__icon">
-            <use href="${(0, _iconsSvgDefault.default)}#icon-arrow-right"></use>
-          </svg>
-        </a>
-      </div> `;
-        recipeContainer.innerHTML = "";
-        recipeContainer.innerHTML = markUp;
-        console.log(recipe);
+        (0, _viewRecipeJsDefault.default).render(_modelJs.state.recipe);
+    // rendering the recipe data
     } catch (err) {
         alert(err);
     }
 };
-// window.addEventListener(hashchange, showRecipe);
-// window.addEventListener(load, showRecipe);
+// window.addEventListener(hashchange, controlRecipes);
+// window.addEventListener(load, controlRecipes);
 const evs = [
     "load",
     "hashchange"
 ];
 evs.forEach((ev)=>{
-    window.addEventListener(ev, showRecipe);
+    window.addEventListener(ev, controlRecipes);
 });
-showRecipe();
+controlRecipes();
 
-},{"core-js/modules/web.immediate.js":"49tUX","regenerator-runtime/runtime":"dXNgZ","url:../img/icons.svg":"loVOp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./model.js":"Y4A21"}],"49tUX":[function(require,module,exports) {
+},{"core-js/modules/web.immediate.js":"49tUX","./model.js":"Y4A21","regenerator-runtime/runtime":"dXNgZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","url:../js/view/viewRecipe.js":"kgibP"}],"49tUX":[function(require,module,exports) {
 "use strict";
 // TODO: Remove this module from `core-js@4` since it's split to modules listed below
 require("52e9b3eefbbce1ed");
@@ -1960,7 +1861,37 @@ module.exports = function(scheduler, hasTimeArg) {
 "use strict";
 /* global Bun -- Deno case */ module.exports = typeof Bun == "function" && Bun && typeof Bun.version == "string";
 
-},{}],"dXNgZ":[function(require,module,exports) {
+},{}],"Y4A21":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+parcelHelpers.export(exports, "state", ()=>state);
+parcelHelpers.export(exports, "loadRecipe", ()=>loadRecipe);
+var _regeneratorRuntime = require("regenerator-runtime");
+const state = {
+    recipe: {}
+};
+const loadRecipe = async function(id) {
+    try {
+        const res = await fetch(`https://forkify-api.herokuapp.com/api/v2/recipes/${id}`);
+        const data = await res.json();
+        if (!res.ok) throw new Error(`${(data, message)} {${res.status}}`);
+        let { recipe } = data.data;
+        state.recipe = {
+            cookingTime: recipe.cooking_time,
+            id: recipe.id,
+            imageUrl: recipe.image_url,
+            ingredients: recipe.ingredients,
+            publisher: recipe.publisher,
+            servings: recipe.servings,
+            sourceUrl: recipe.source_url,
+            title: recipe.title
+        };
+    } catch (err) {
+        alert(err);
+    }
+};
+
+},{"regenerator-runtime":"dXNgZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"dXNgZ":[function(require,module,exports) {
 /**
  * Copyright (c) 2014-present, Facebook, Inc.
  *
@@ -2544,10 +2475,40 @@ try {
     else Function("r", "regeneratorRuntime = r")(runtime);
 }
 
-},{}],"loVOp":[function(require,module,exports) {
-module.exports = require("9bcc84ee5d265e38").getBundleURL("hWUTQ") + "icons.dfd7a6db.svg" + "?" + Date.now();
+},{}],"gkKU3":[function(require,module,exports) {
+exports.interopDefault = function(a) {
+    return a && a.__esModule ? a : {
+        default: a
+    };
+};
+exports.defineInteropFlag = function(a) {
+    Object.defineProperty(a, "__esModule", {
+        value: true
+    });
+};
+exports.exportAll = function(source, dest) {
+    Object.keys(source).forEach(function(key) {
+        if (key === "default" || key === "__esModule" || dest.hasOwnProperty(key)) return;
+        Object.defineProperty(dest, key, {
+            enumerable: true,
+            get: function() {
+                return source[key];
+            }
+        });
+    });
+    return dest;
+};
+exports.export = function(dest, destName, get) {
+    Object.defineProperty(dest, destName, {
+        enumerable: true,
+        get: get
+    });
+};
 
-},{"9bcc84ee5d265e38":"lgJ39"}],"lgJ39":[function(require,module,exports) {
+},{}],"kgibP":[function(require,module,exports) {
+module.exports = require("8d9416ad59b71b3a").getBundleURL("hWUTQ") + "viewRecipe.bb3e49db.js" + "?" + Date.now();
+
+},{"8d9416ad59b71b3a":"lgJ39"}],"lgJ39":[function(require,module,exports) {
 "use strict";
 var bundleURL = {};
 function getBundleURLCached(id) {
@@ -2582,66 +2543,6 @@ exports.getBundleURL = getBundleURLCached;
 exports.getBaseURL = getBaseURL;
 exports.getOrigin = getOrigin;
 
-},{}],"gkKU3":[function(require,module,exports) {
-exports.interopDefault = function(a) {
-    return a && a.__esModule ? a : {
-        default: a
-    };
-};
-exports.defineInteropFlag = function(a) {
-    Object.defineProperty(a, "__esModule", {
-        value: true
-    });
-};
-exports.exportAll = function(source, dest) {
-    Object.keys(source).forEach(function(key) {
-        if (key === "default" || key === "__esModule" || dest.hasOwnProperty(key)) return;
-        Object.defineProperty(dest, key, {
-            enumerable: true,
-            get: function() {
-                return source[key];
-            }
-        });
-    });
-    return dest;
-};
-exports.export = function(dest, destName, get) {
-    Object.defineProperty(dest, destName, {
-        enumerable: true,
-        get: get
-    });
-};
-
-},{}],"Y4A21":[function(require,module,exports) {
-var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
-parcelHelpers.defineInteropFlag(exports);
-parcelHelpers.export(exports, "state", ()=>state);
-parcelHelpers.export(exports, "loadRecipe", ()=>loadRecipe);
-var _regeneratorRuntime = require("regenerator-runtime");
-const state = {
-    recipe: {}
-};
-const loadRecipe = async function(id) {
-    try {
-        const res = await fetch(`https://forkify-api.herokuapp.com/api/v2/recipes/${id}`);
-        const data = await res.json();
-        if (!res.ok) throw new Error(`${(data, message)} {${res.status}}`);
-        let { recipe } = data.data;
-        state.recipe = {
-            cookingTime: recipe.cooking_time,
-            id: recipe.id,
-            imageUrl: recipe.image_url,
-            ingredients: recipe.ingredients,
-            publisher: recipe.publisher,
-            servings: recipe.servings,
-            sourceUrl: recipe.source_url,
-            title: recipe.title
-        };
-    } catch (err) {
-        alert(err);
-    }
-};
-
-},{"regenerator-runtime":"dXNgZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["aD7Zm","aenu9"], "aenu9", "parcelRequire3a11")
+},{}]},["aD7Zm","aenu9"], "aenu9", "parcelRequire3a11")
 
 //# sourceMappingURL=index.e37f48ea.js.map
