@@ -1,7 +1,6 @@
 import icons from "url:../../img/icons.svg";
 import { Fraction } from 'fractional';
 
-console.log(Fraction);
 
 class recipeView {
   #parentEl = document.querySelector('.recipe');
@@ -118,6 +117,13 @@ class recipeView {
                   ${ing.description}
                 </div>
               </li>`;
+  }
+
+  addHandlerRender(handler) {
+    const evs = ['load', 'hashchange'];
+    evs.forEach(ev => {
+      window.addEventListener(ev, handler);
+    })
   }
 
 }

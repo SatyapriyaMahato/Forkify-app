@@ -596,15 +596,10 @@ const controlRecipes = async function() {
         console.log(err);
     }
 };
-// window.addEventListener(hashchange, controlRecipes);
-// window.addEventListener(load, controlRecipes);
-const evs = [
-    "load",
-    "hashchange"
-];
-evs.forEach((ev)=>{
-    window.addEventListener(ev, controlRecipes);
-});
+const init = function() {
+    (0, _viewRecipeJsDefault.default).addHandlerRender(controlRecipes);
+};
+init();
 
 },{"core-js/modules/web.immediate.js":"49tUX","./model.js":"Y4A21","regenerator-runtime/runtime":"dXNgZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./view/viewRecipe.js":"f02Pr"}],"49tUX":[function(require,module,exports) {
 "use strict";
@@ -2536,7 +2531,6 @@ parcelHelpers.defineInteropFlag(exports);
 var _iconsSvg = require("url:../../img/icons.svg");
 var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
 var _fractional = require("fractional");
-console.log((0, _fractional.Fraction));
 class recipeView {
     #parentEl = document.querySelector(".recipe");
     #data;
@@ -2647,6 +2641,15 @@ class recipeView {
                   ${ing.description}
                 </div>
               </li>`;
+    }
+    addHandlerRender(handler) {
+        const evs = [
+            "load",
+            "hashchange"
+        ];
+        evs.forEach((ev)=>{
+            window.addEventListener(ev, handler);
+        });
     }
 }
 exports.default = new recipeView();
