@@ -5,8 +5,7 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
 // import icons from the img file
-import recipeView from "url:../js/view/viewRecipe.js";
-console.log(recipeView);
+import recipeView from "./view/viewRecipe.js";
 
 
 const recipeContainer = document.querySelector('.recipe');
@@ -30,7 +29,7 @@ const controlRecipes = async function () {
 
     const id = window.location.hash.slice(1);
     if (!id) return;
-
+    console.log(id);
     recipeView.renderSpinner();
 
     // Getting t he recipe data
@@ -53,4 +52,3 @@ const evs = ['load', 'hashchange'];
 evs.forEach(ev => {
   window.addEventListener(ev, controlRecipes);
 })
-controlRecipes();

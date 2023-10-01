@@ -2,34 +2,33 @@ import icons from "url:../../img/icons.svg";
 
 
 class recipeView {
-    #parentEl = document.querySelector('.recipe');
-    #data;
+  #parentEl = document.querySelector('.recipe');
+  #data;
 
-    render(data) {
-        this.#data = data;
-        const markup = this.#generateMarkup;
-        this.#clear;
-        this.#parentEl.insertAdjacentHTML("afterbegin", markup);
-    };
+  render(data) {
+    this.#data = data;
+    const markup = this.#generateMarkup();
+    this.#clear();
+    this.#parentEl.insertAdjacentHTML("afterbegin", markup);
+  };
 
-    #clear() {
-        this.#parentEl.innerHTML = '';
-    };
+  #clear() {
+    this.#parentEl.innerHTML = '';
+  };
 
-    // Loader spinner
-    renderSpinner = function () {
-        const markUp = `<div class="spinner">
+  // Loader spinner
+  renderSpinner = function () {
+    const markUp = `<div class="spinner">
     <svg>
       <use href="${icons}#icon-loader"></use>
     </svg>
   </div>`;
-        this.#parentEl.innerHTML = '';
-        this.#parentEl.insertAdjacentHTML("afterbegin", markUp);
-    };
+    this.#parentEl.innerHTML = '';
+    this.#parentEl.insertAdjacentHTML("afterbegin", markUp);
+  };
 
-    #generateMarkup() {
-        return
-        `<figure class="recipe__fig">
+  #generateMarkup() {
+    return `<figure class="recipe__fig">
         <img src=${this.#data.imageUrl} alt="Tomato" class="recipe__img" />
         <h1 class="recipe__title">
           <span>${this.#data.title}</span>
@@ -82,7 +81,7 @@ class recipeView {
         <ul class="recipe__ingredient-list">
         
           ${this.#data.ingredients.map(ing => {
-            return `<li class="recipe__ingredient">
+      return `<li class="recipe__ingredient">
                   <svg class="recipe__icon">
                   <use href="${icons}#icon-check"></use>
                 </svg>
@@ -92,7 +91,7 @@ class recipeView {
                   ${this.#data.description}
                 </div>
               </li>`;
-        }).join('')}
+    }).join('')}
          
         </ul>
       </div>
@@ -115,7 +114,7 @@ class recipeView {
           </svg>
         </a>
       </div> `;
-    };
+  };
 
 }
 

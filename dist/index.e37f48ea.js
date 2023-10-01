@@ -579,9 +579,8 @@ var _webImmediateJs = require("core-js/modules/web.immediate.js");
 var _modelJs = require("./model.js");
 var _runtime = require("regenerator-runtime/runtime");
 // import icons from the img file
-var _viewRecipeJs = require("url:../js/view/viewRecipe.js");
+var _viewRecipeJs = require("./view/viewRecipe.js");
 var _viewRecipeJsDefault = parcelHelpers.interopDefault(_viewRecipeJs);
-console.log((0, _viewRecipeJsDefault.default));
 const recipeContainer = document.querySelector(".recipe");
 const timeout = function(s) {
     return new Promise(function(_, reject) {
@@ -596,6 +595,7 @@ const controlRecipes = async function() {
     try {
         const id = window.location.hash.slice(1);
         if (!id) return;
+        console.log(id);
         (0, _viewRecipeJsDefault.default).renderSpinner();
         // Getting t he recipe data
         await _modelJs.loadRecipe(id);
@@ -614,9 +614,8 @@ const evs = [
 evs.forEach((ev)=>{
     window.addEventListener(ev, controlRecipes);
 });
-controlRecipes();
 
-},{"core-js/modules/web.immediate.js":"49tUX","./model.js":"Y4A21","regenerator-runtime/runtime":"dXNgZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","url:../js/view/viewRecipe.js":"kgibP"}],"49tUX":[function(require,module,exports) {
+},{"core-js/modules/web.immediate.js":"49tUX","./model.js":"Y4A21","regenerator-runtime/runtime":"dXNgZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./view/viewRecipe.js":"f02Pr"}],"49tUX":[function(require,module,exports) {
 "use strict";
 // TODO: Remove this module from `core-js@4` since it's split to modules listed below
 require("52e9b3eefbbce1ed");
@@ -2505,10 +2504,128 @@ exports.export = function(dest, destName, get) {
     });
 };
 
-},{}],"kgibP":[function(require,module,exports) {
-module.exports = require("8d9416ad59b71b3a").getBundleURL("hWUTQ") + "viewRecipe.bb3e49db.js" + "?" + Date.now();
+},{}],"f02Pr":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+var _iconsSvg = require("url:../../img/icons.svg");
+var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
+class recipeView {
+    #parentEl = document.querySelector(".recipe");
+    #data;
+    render(data) {
+        this.#data = data;
+        const markup = this.#generateMarkup();
+        this.#clear();
+        this.#parentEl.insertAdjacentHTML("afterbegin", markup);
+    }
+    #clear() {
+        this.#parentEl.innerHTML = "";
+    }
+    // Loader spinner
+    renderSpinner = function() {
+        const markUp = `<div class="spinner">
+    <svg>
+      <use href="${(0, _iconsSvgDefault.default)}#icon-loader"></use>
+    </svg>
+  </div>`;
+        this.#parentEl.innerHTML = "";
+        this.#parentEl.insertAdjacentHTML("afterbegin", markUp);
+    };
+    #generateMarkup() {
+        return `<figure class="recipe__fig">
+        <img src=${this.#data.imageUrl} alt="Tomato" class="recipe__img" />
+        <h1 class="recipe__title">
+          <span>${this.#data.title}</span>
+        </h1>
+      </figure>
 
-},{"8d9416ad59b71b3a":"lgJ39"}],"lgJ39":[function(require,module,exports) {
+      <div class="recipe__details">
+        <div class="recipe__info">
+          <svg class="recipe__info-icon">
+            <use href="${0, _iconsSvgDefault.default}#icon-clock"></use>
+          </svg>
+          <span class="recipe__info-data recipe__info-data--minutes">${this.#data.cookingTime}</span>
+          <span class="recipe__info-text">minutes</span>
+        </div>
+        <div class="recipe__info">
+          <svg class="recipe__info-icon">
+            <use href="${0, _iconsSvgDefault.default}#icon-users"></use>
+          </svg>
+          <span class="recipe__info-data recipe__info-data--people">${this.#data.servings}</span>
+          <span class="recipe__info-text">servings</span>
+
+          <div class="recipe__info-buttons">
+            <button class="btn--tiny btn--increase-servings">
+              <svg>
+                <use href="${0, _iconsSvgDefault.default}#icon-minus-circle"></use>
+              </svg>
+            </button>
+            <button class="btn--tiny btn--increase-servings">
+              <svg>
+                <use href="${0, _iconsSvgDefault.default}#icon-plus-circle"></use>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="recipe__user-generated">
+          <svg>
+            <use href="${0, _iconsSvgDefault.default}#icon-user"></use>
+          </svg>
+        </div>
+        <button class="btn--round">
+          <svg class="">
+            <use href="${0, _iconsSvgDefault.default}#icon-bookmark-fill"></use>
+          </svg>
+        </button>
+      </div>
+
+      <div class="recipe__ingredients">
+        <h2 class="heading--2">Recipe ingredients</h2>
+        <ul class="recipe__ingredient-list">
+        
+          ${this.#data.ingredients.map((ing)=>{
+            return `<li class="recipe__ingredient">
+                  <svg class="recipe__icon">
+                  <use href="${0, _iconsSvgDefault.default}#icon-check"></use>
+                </svg>
+                <div class="recipe__quantity">${ing.quantity}</div>
+                <div class="recipe__description">
+                  <span class="recipe__unit">${this.#data.unit}</span>
+                  ${this.#data.description}
+                </div>
+              </li>`;
+        }).join("")}
+         
+        </ul>
+      </div>
+
+      <div class="recipe__directions">
+        <h2 class="heading--2">How to cook it</h2>
+        <p class="recipe__directions-text">
+          This recipe was carefully designed and tested by
+          <span class="recipe__publisher">${this.#data.publisher}</span>. Please check out
+          directions at their website.
+        </p>
+        <a
+          class="btn--small recipe__btn"
+          href=${this.#data.sourceUrl}
+          target="_blank"
+        >
+          <span>Directions</span>
+          <svg class="search__icon">
+            <use href="${0, _iconsSvgDefault.default}#icon-arrow-right"></use>
+          </svg>
+        </a>
+      </div> `;
+    }
+}
+exports.default = new recipeView();
+
+},{"url:../../img/icons.svg":"loVOp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"loVOp":[function(require,module,exports) {
+module.exports = require("9bcc84ee5d265e38").getBundleURL("hWUTQ") + "icons.dfd7a6db.svg" + "?" + Date.now();
+
+},{"9bcc84ee5d265e38":"lgJ39"}],"lgJ39":[function(require,module,exports) {
 "use strict";
 var bundleURL = {};
 function getBundleURLCached(id) {
