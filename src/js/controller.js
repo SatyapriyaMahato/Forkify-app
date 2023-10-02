@@ -7,6 +7,7 @@ import 'regenerator-runtime/runtime';
 // import icons from the img file
 import recipeView from "./view/viewRecipe.js";
 import searchView from "./view/searchView.js";
+import resultView from "./view/resultView.js";
 
 
 
@@ -34,9 +35,18 @@ const controlRecipes = async function () {
 
 const controlSearchResults = async function () {
   try {
+
+    // step-1 Get Search query
     const query = searchView.getQuery();
+    if (!query) return;
+
+    // step-2 Get Search Results
     await model.loadSearchResults(query);
-    console.log(model.state.search.results);
+
+    // step-3 show results
+
+    const data = model.state.search.results;
+    resultView.render(data);
 
   } catch (err) {
     console.log(err);

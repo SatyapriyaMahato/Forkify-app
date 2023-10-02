@@ -37,7 +37,7 @@ export const loadSearchResults = async function (query) {
                 id: arr.id,
                 imageUrl: arr.image_url,
                 publisher: arr.publisher,
-                ingredients: arr.title,
+                title: arr.title,
             }
         })
     } catch (err) {
