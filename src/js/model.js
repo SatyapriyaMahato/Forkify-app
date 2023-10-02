@@ -3,7 +3,11 @@ import { API_KEY } from "./config";
 import { getJSON } from "./helper";
 
 export const state = {
-    recipe: {}
+    recipe: {},
+    search: {
+        query: '',
+        results: []
+    }
 }
 
 export const loadRecipe = async function (id) {
@@ -20,6 +24,22 @@ export const loadRecipe = async function (id) {
             sourceUrl: recipe.source_url,
             title: recipe.title
         }
+    } catch (err) {
+        throw err;
+    }
+}
+
+export const loadSearchResults = async function (query) {
+    try {
+        const data = await getJSON(`${API_KEY}?search=${query}`);
+        state.search.results = data.data.recipes.map((arr) => {
+            return {
+                id: arr.id,
+                imageUrl: arr.image_url,
+                publisher: arr.publisher,
+                ingredients: arr.title,
+            }
+        })
     } catch (err) {
         throw err;
     }

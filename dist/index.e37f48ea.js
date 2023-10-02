@@ -581,6 +581,8 @@ var _runtime = require("regenerator-runtime/runtime");
 // import icons from the img file
 var _viewRecipeJs = require("./view/viewRecipe.js");
 var _viewRecipeJsDefault = parcelHelpers.interopDefault(_viewRecipeJs);
+var _searchViewJs = require("./view/searchView.js");
+var _searchViewJsDefault = parcelHelpers.interopDefault(_searchViewJs);
 // https://forkify-api.herokuapp.com/v2
 ///////////////////////////////////////
 const controlRecipes = async function() {
@@ -596,12 +598,23 @@ const controlRecipes = async function() {
         (0, _viewRecipeJsDefault.default).renderError();
     }
 };
+const controlSearchResults = async function() {
+    try {
+        const query = (0, _searchViewJsDefault.default).getQuery();
+        await _modelJs.loadSearchResults(query);
+        console.log(_modelJs.state.search.results);
+    } catch (err) {
+        console.log(err);
+    }
+};
 const init = function() {
     (0, _viewRecipeJsDefault.default).addHandlerRender(controlRecipes);
+    (0, _searchViewJsDefault.default).addHandlerSearch(controlSearchResults);
 };
 init();
+controlSearchResults("pizza");
 
-},{"core-js/modules/web.immediate.js":"49tUX","./model.js":"Y4A21","regenerator-runtime/runtime":"dXNgZ","./view/viewRecipe.js":"f02Pr","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"49tUX":[function(require,module,exports) {
+},{"core-js/modules/web.immediate.js":"49tUX","./model.js":"Y4A21","regenerator-runtime/runtime":"dXNgZ","./view/viewRecipe.js":"f02Pr","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./view/searchView.js":"blwqv"}],"49tUX":[function(require,module,exports) {
 "use strict";
 // TODO: Remove this module from `core-js@4` since it's split to modules listed below
 require("52e9b3eefbbce1ed");
@@ -1851,11 +1864,16 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "state", ()=>state);
 parcelHelpers.export(exports, "loadRecipe", ()=>loadRecipe);
+parcelHelpers.export(exports, "loadSearchResults", ()=>loadSearchResults);
 var _regeneratorRuntime = require("regenerator-runtime");
 var _config = require("./config");
 var _helper = require("./helper");
 const state = {
-    recipe: {}
+    recipe: {},
+    search: {
+        query: "",
+        results: []
+    }
 };
 const loadRecipe = async function(id) {
     try {
@@ -1871,6 +1889,21 @@ const loadRecipe = async function(id) {
             sourceUrl: recipe.source_url,
             title: recipe.title
         };
+    } catch (err) {
+        throw err;
+    }
+};
+const loadSearchResults = async function(query) {
+    try {
+        const data = await (0, _helper.getJSON)(`${(0, _config.API_KEY)}?search=${query}`);
+        state.search.results = data.data.recipes.map((arr)=>{
+            return {
+                id: arr.id,
+                imageUrl: arr.image_url,
+                publisher: arr.publisher,
+                ingredients: arr.title
+            };
+        });
     } catch (err) {
         throw err;
     }
@@ -2959,6 +2992,25 @@ Fraction.primeFactors = function(n) {
 };
 module.exports.Fraction = Fraction;
 
-},{}]},["aD7Zm","aenu9"], "aenu9", "parcelRequire3a11")
+},{}],"blwqv":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+class SearchView {
+    #parentEl = document.querySelector(".search");
+    getQuery() {
+        const query = document.querySelector(".search__field").value;
+        document.querySelector(".search__field").value = "";
+        return query;
+    }
+    addHandlerSearch(handler) {
+        this.#parentEl.addEventListener("submit", function(e) {
+            e.preventDefault();
+            handler();
+        });
+    }
+}
+exports.default = new SearchView();
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["aD7Zm","aenu9"], "aenu9", "parcelRequire3a11")
 
 //# sourceMappingURL=index.e37f48ea.js.map
