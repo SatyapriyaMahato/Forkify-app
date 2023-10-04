@@ -5,10 +5,9 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
 // import icons from the img file
-import recipeView from "./view/viewRecipe.js";
+import recipeView from "./view/recipeView.js";
 import searchView from "./view/searchView.js";
 import resultView from "./view/resultView.js";
-
 
 
 // https://forkify-api.herokuapp.com/v2
@@ -18,6 +17,7 @@ import resultView from "./view/resultView.js";
 
 const controlRecipes = async function () {
   try {
+    recipeView.renderMessage();
     const id = window.location.hash.slice(1);
     if (!id) return;
     recipeView.renderSpinner();
@@ -29,6 +29,7 @@ const controlRecipes = async function () {
     // rendering the recipe data
   } catch (err) {
     recipeView.renderError();
+
   }
 
 }
@@ -41,10 +42,10 @@ const controlSearchResults = async function () {
     if (!query) return;
 
     // step-2 Get Search Results
+    resultView.renderSpinner();
     await model.loadSearchResults(query);
 
     // step-3 show results
-
     const data = model.state.search.results;
     resultView.render(data);
 

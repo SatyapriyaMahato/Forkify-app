@@ -1,31 +1,21 @@
 import icons from "url:../../img/icons.svg";
+import View from "./mainView.js";
+
+class resultView extends View {
+  _parentEl = document.querySelector('.results');
+  _data;
+  _errorMessage = 'We could not find that recipe. Please try another one!';
+  _message = '';
 
 
-class resultView {
-    #parentEl = document.querySelector('.results');
-    #data;
-    #errorMessage = 'We could not find that recipe. Please try another one!';
-    #message = '';
+  _generateMarkup() {
+    return this._data.map((li) => this._generateMarkupPreview(li)).join('');
+  }
 
-    render(data) {
-        this.#data = data;
-        const markup = this.#generateMarkup();
 
-        this.#clear();
-        this.#parentEl.insertAdjacentHTML("afterbegin", markup);
-    };
-
-    #generateMarkup() {
-        return this.#data.map((li) => this.#generateMarkupPreview(li)).join('');
-    }
-
-    #clear() {
-        this.#parentEl.innerHTML = '';
-    };
-
-    #generateMarkupPreview(prevData) {
-        console.log(prevData);
-        return `<li class="preview">
+  _generateMarkupPreview(prevData) {
+    console.log(prevData);
+    return `<li class="preview">
         <a class="preview__link preview__link--active" href="#${prevData.id}">
           <figure class="preview__fig">
             <img src=${prevData.imageUrl} alt="Test" />
@@ -35,13 +25,13 @@ class resultView {
             <p class="preview__publisher">${prevData.publisher}</p>
             <div class="preview__user-generated">
               <svg>
-                <use href=${icons}#icon-user"></use>
+                <use href="${icons}#icon-user"></use>
               </svg>
             </div>
           </div>
         </a>
       </li>`
-    }
+  }
 }
 
 export default new resultView();
