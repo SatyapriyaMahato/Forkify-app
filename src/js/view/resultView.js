@@ -4,7 +4,7 @@ import View from "./mainView.js";
 class resultView extends View {
   _parentEl = document.querySelector('.results');
   _data;
-  _errorMessage = 'We could not find that recipe. Please try another one!';
+  _errorMessage = 'No recipe found for your query. Please try another one!';
   _message = '';
 
 
@@ -14,7 +14,6 @@ class resultView extends View {
 
 
   _generateMarkupPreview(prevData) {
-    console.log(prevData);
     return `<li class="preview">
         <a class="preview__link preview__link--active" href="#${prevData.id}">
           <figure class="preview__fig">
