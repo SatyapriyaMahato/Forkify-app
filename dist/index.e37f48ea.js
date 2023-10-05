@@ -624,15 +624,22 @@ const controlPagination = function(pageNum) {
     (0, _resultViewJsDefault.default).render(data);
     (0, _paginationViewJsDefault.default).render(_modelJs.state.search);
 };
+const controlServings = function(newServings) {
+    // update the recipe servings
+    _modelJs.updateServing(newServings);
+    //update therecipe view
+    (0, _recipeViewJsDefault.default).render(_modelJs.state.recipe);
+};
 const init = function() {
     (0, _recipeViewJsDefault.default).addHandlerRender(controlRecipes);
     (0, _searchViewJsDefault.default).addHandlerSearch(controlSearchResults);
     (0, _paginationViewJsDefault.default).addHandlerClick(controlPagination);
+    (0, _recipeViewJsDefault.default).addHandlerUpdateServings(controlServings);
 };
 init();
 controlSearchResults("pizza");
 
-},{"core-js/modules/web.immediate.js":"49tUX","./model.js":"Y4A21","regenerator-runtime/runtime":"dXNgZ","./view/recipeView.js":"7Olh7","./view/searchView.js":"blwqv","./view/resultView.js":"i3HJw","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","./view/paginationView.js":"9Reww"}],"49tUX":[function(require,module,exports) {
+},{"core-js/modules/web.immediate.js":"49tUX","./model.js":"Y4A21","regenerator-runtime/runtime":"dXNgZ","./view/recipeView.js":"7Olh7","./view/searchView.js":"blwqv","./view/resultView.js":"i3HJw","./view/paginationView.js":"9Reww","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"49tUX":[function(require,module,exports) {
 "use strict";
 // TODO: Remove this module from `core-js@4` since it's split to modules listed below
 require("52e9b3eefbbce1ed");
@@ -1883,6 +1890,7 @@ parcelHelpers.defineInteropFlag(exports);
 parcelHelpers.export(exports, "state", ()=>state);
 parcelHelpers.export(exports, "loadRecipe", ()=>loadRecipe);
 parcelHelpers.export(exports, "loadSearchResults", ()=>loadSearchResults);
+parcelHelpers.export(exports, "updateServing", ()=>updateServing);
 parcelHelpers.export(exports, "getSearchResultPerPage", ()=>getSearchResultPerPage);
 var _regeneratorRuntime = require("regenerator-runtime");
 var _config = require("./config");
@@ -1928,6 +1936,12 @@ const loadSearchResults = async function(query) {
     } catch (err) {
         throw err;
     }
+};
+const updateServing = function(newServings) {
+    state.recipe.ingredients.forEach((ing)=>{
+        return ing.quantity = ing.quantity * newServings / state.recipe.servings;
+    });
+    state.recipe.servings = newServings;
 };
 const getSearchResultPerPage = function(page = state.search.page) {
     state.search.page = page;
@@ -2623,12 +2637,12 @@ class recipeView extends (0, _mainViewJsDefault.default) {
           <span class="recipe__info-text">servings</span>
 
           <div class="recipe__info-buttons">
-            <button class="btn--tiny btn--increase-servings">
+            <button data-update-to = "${this._data.servings - 1}" class="btn--tiny btn--update-servings">
               <svg>
                 <use href="${0, _iconsSvgDefault.default}#icon-minus-circle"></use>
               </svg>
             </button>
-            <button class="btn--tiny btn--increase-servings">
+            <button data-update-to = "${this._data.servings + 1}" class="btn--tiny btn--update-servings">
               <svg>
                 <use href="${0, _iconsSvgDefault.default}#icon-plus-circle"></use>
               </svg>
@@ -2695,6 +2709,14 @@ class recipeView extends (0, _mainViewJsDefault.default) {
         ];
         evs.forEach((ev)=>{
             window.addEventListener(ev, handler);
+        });
+    }
+    addHandlerUpdateServings(handler) {
+        this._parentEl.addEventListener("click", function(e) {
+            const btn = e.target.closest(".btn--update-servings");
+            if (!btn) return;
+            const { updateTo } = btn.dataset;
+            if (+updateTo > 0) handler(+updateTo);
         });
     }
 }
@@ -3165,6 +3187,6 @@ class paginationView extends (0, _mainViewDefault.default) {
 }
 exports.default = new paginationView();
 
-},{"./mainView":"fDROW","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3","url:../../img/icons.svg":"loVOp"}]},["aD7Zm","aenu9"], "aenu9", "parcelRequire3a11")
+},{"./mainView":"fDROW","url:../../img/icons.svg":"loVOp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["aD7Zm","aenu9"], "aenu9", "parcelRequire3a11")
 
 //# sourceMappingURL=index.e37f48ea.js.map
